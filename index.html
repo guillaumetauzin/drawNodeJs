@@ -1,0 +1,148 @@
+   <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <center>
+            <div style="background-color: grey;">
+            <button id="black" onclick="color(this)">Noir</button>
+            <button id="red" onclick="color(this)">Rouge</button>
+            <button id="green" onclick="color(this)">Vert</button>
+            <button id="blue" onclick="color(this)">Bleu</button>
+            <button id="orange" onclick="color(this)">Orange</button>
+            <button id="yellow" onclick="color(this)">Jaune</button>
+            <input type="password" placeholder="code" style="width: 36px;" id="valcode" id="clear"><button id="clear" onclick="clearr()">Effacer</button>
+            </div>
+        </center>
+        <h1 style="font-size: 20px; z-index: -5; width: 50px; margin-left: 20px; top:10px; position: fixed;">Connextion(s):<span id="counter">0</span></h1>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <style type="text/css">
+            body{margin: 0;}
+        </style>
+    </head>
+    <script type="text/javascript">
+        var socket = io.connect('localhost:8080');
+
+        var canvas, ctx, flag = false,
+            prevX = 0,
+            currX = 0,
+            prevY = 0,
+            currY = 0,
+            dot_flag = false;
+        var x = "black",
+            y = 2;
+
+        function clearr() {
+            var mdp = $("#valcode").val();
+            socket.emit('sendClear', mdp);
+        }
+
+        function init() {
+            canvas = document.getElementById('can');
+            ctx = canvas.getContext("2d");
+            w = canvas.width;
+            h = canvas.height;
+        
+            canvas.addEventListener("mousemove", function (e) {
+                findxy('move', e)
+            }, false);
+            canvas.addEventListener("mousedown", function (e) {
+                findxy('down', e)
+            }, false);
+            canvas.addEventListener("mouseup", function (e) {
+                findxy('up', e)
+            }, false);
+            canvas.addEventListener("mouseout", function (e) {
+                findxy('out', e)
+            }, false);
+        }
+        
+        function color(obj) {
+            switch (obj.id) {
+                case "green":
+                    x = "green";
+                    break;
+                case "blue":
+                    x = "blue";
+                    break;
+                case "red":
+                    x = "red";
+                    break;
+                case "yellow":
+                    x = "yellow";
+                    break;
+                case "orange":
+                    x = "orange";
+                    break;
+                case "black":
+                    x = "black";
+                    break;
+                case "white":
+                    x = "white";
+                    break;
+            }
+            if (x == "white") y = 14;
+            else y = 2;
+        
+        }
+        
+        function draw() {
+            socket.emit('sendCursors', [prevX, prevY, currX, currY, x, y]);
+        }
+    //clients - serveur
+        socket.on('counter', function(count) {
+            document.getElementById("counter").innerHTML = count;
+
+        })
+
+        socket.on('sendPoints', function(data) {
+
+            ctx.beginPath();
+            ctx.moveTo(data[0], data[1]);
+            ctx.lineTo(data[2], data[3]);
+            ctx.strokeStyle = data[4];
+            ctx.lineWidth = data[5];
+            ctx.stroke();
+            ctx.closePath();
+
+        })
+
+        socket.on('clearScreen', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        })
+
+        function findxy(res, e) {
+            if (res == 'down') {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+        
+                flag = true;
+                dot_flag = true;
+                if (dot_flag) {
+                    ctx.beginPath();
+                    ctx.fillStyle = x;
+                    ctx.fillRect(currX, currY, 2, 2);
+                    ctx.closePath();
+                    dot_flag = false;
+                }
+            }
+            if (res == 'up' || res == "out") {
+                flag = false;
+            }
+            if (res == 'move') {
+                if (flag) {
+                    prevX = currX;
+                    prevY = currY;
+                    currX = e.clientX - canvas.offsetLeft;
+                    currY = e.clientY - canvas.offsetTop;
+                    draw();
+                }
+            }
+        }
+    </script>
+    <body onload="init()">
+        <canvas style="z-index: -1; position: fixed; top: 0; left: 0;" id="can" width="5000" height="5000">
+    </body>
+    </html>
