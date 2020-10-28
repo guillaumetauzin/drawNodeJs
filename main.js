@@ -1,4 +1,4 @@
-/* eslint no-console: "Info" */
+/* eslint no-console: "off" */
 var http = require("http");
 var fs = require("fs");
 // Chargement du fichier index.html affiché au client
