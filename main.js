@@ -1,3 +1,4 @@
+/* eslint no-console: "Info" */
 var http = require("http");
 var fs = require("fs");
 // Chargement du fichier index.html affiché au client
@@ -25,8 +26,8 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("sendClear", function(data2) {
-        if (data2 == "azaz") {
-        	console.log("Ecran Reset !")
+        if (data2 === "azaz") {
+            console.log("Ecran Reset !")
             socket.broadcast.emit("clearScreen");
             socket.emit("clearScreen");
         }
