@@ -14,7 +14,7 @@ var count = 0;
 var io = require("socket.io").listen(server);
 
 io.sockets.on("connection", function (socket) {
-	
+
     count++;
     socket.broadcast.emit("counter", count);
     socket.emit("counter", count);
@@ -31,12 +31,12 @@ io.sockets.on("connection", function (socket) {
             socket.broadcast.emit("clearScreen");
             socket.emit("clearScreen");
         }
-    
+
     });
     socket.on("disconnect", function() {
     count--;
     socket.broadcast.emit("counter", count);
-  	});
+    });
     
 });
 
