@@ -15,14 +15,14 @@ var io = require("socket.io").listen(server);
 
 io.sockets.on("connection", function (socket) {
 	
-	count++;
+    count++;
     socket.broadcast.emit("counter", count);
     socket.emit("counter", count);
-
+    
     socket.on("sendCursors", function (data) {
-        console.log(data);
-        socket.broadcast.emit("sendPoints", data);
-        socket.emit("sendPoints", data);
+    console.log(data);
+    socket.broadcast.emit("sendPoints", data);
+    socket.emit("sendPoints", data);
     });
 
     socket.on("sendClear", function(data2) {
@@ -31,18 +31,14 @@ io.sockets.on("connection", function (socket) {
             socket.broadcast.emit("clearScreen");
             socket.emit("clearScreen");
         }
-
+    
     });
-
     socket.on("disconnect", function() {
-	    count--;
-        socket.broadcast.emit("counter", count);
+    count--;
+    socket.broadcast.emit("counter", count);
   	});
-
+    
 });
 
-
-
 server.listen(8080);
-
 console.log("Serveur lancé sur le port 8080 !");
