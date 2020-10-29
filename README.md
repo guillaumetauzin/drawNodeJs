@@ -1,7 +1,7 @@
 # DrawNodeJS
 
 [![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
-https://img.shields.io/github/license/guillaumetauzin/drawNodeJs?style=for-the-badge
+[![forthebadge](https://img.shields.io/github/license/guillaumetauzin/drawNodeJs?style=for-the-badge)](http://forthebadge.com)
 
 Une petite description du projet
 
